@@ -4,7 +4,7 @@
 
 	<groupId>com.sinosoft</groupId>
 	<artifactId>ceph-client</artifactId>
-	<version>2.0.1</version>
+	<version>1.0.1</version>
 	<packaging>jar</packaging>
 
 	<name>ladakh</name>
@@ -23,18 +23,18 @@
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>resteasy-client</artifactId>
-			<version>3.0.12.Final</version>
+			<artifactId>resteasy-jaxrs</artifactId>
+			<version>2.3.7.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 			<version>2.7.4</version>
 		</dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.5</version>
-        </dependency>		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.5</version>
+		</dependency>
 	</dependencies>
 </project>

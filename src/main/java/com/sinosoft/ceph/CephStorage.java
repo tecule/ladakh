@@ -3,13 +3,10 @@ package com.sinosoft.ceph;
 import java.io.IOException;
 import java.util.Iterator;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Invocation.Builder;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
+import org.jboss.resteasy.client.ClientRequest;
+import org.jboss.resteasy.client.ClientResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,13 +26,17 @@ public class CephStorage {
 	
 	public CephStatus getStatus() {
 		CephStatus status = new CephStatus();
-		
-		// use javax.ws.rs.client if reasteasy-xxx-3.x is used
-		Client client = ClientBuilder.newClient();		
-		WebTarget target = client.target(restApiUrl).path("status");
-		Builder builder = target.request(MediaType.APPLICATION_JSON);		
-		Response response = builder.get();
-		String message = response.readEntity(String.class);
+
+		// use resteasy client if reasteasy-xxx-2.x is used
+		ClientRequest request = new ClientRequest(restApiUrl + "/status").accept(MediaType.APPLICATION_JSON);
+		ClientResponse<String> response = null;
+		try {
+			response = request.get(String.class);
+		} catch (Exception e1) {
+			throw new CephException("请求服务出错。" + e1.getMessage(), e1);
+		}
+		// int responseCode = response.getResponseStatus().getStatusCode();
+		String message = response.getEntity();
 		logger.debug(message);
  		
 		ObjectMapper mapper = new ObjectMapper();
@@ -62,8 +63,7 @@ public class CephStorage {
 		status.setOsdCount(null == osdmapNode.get("osdmap").get("num_osds") ? -1 : osdmapNode.get("osdmap").get("num_osds").asInt());
 		status.setOsdUpCount(null == osdmapNode.get("osdmap").get("num_up_osds") ? -1 : osdmapNode.get("osdmap").get("num_up_osds").asInt());
 		status.setOsdInCount(null == osdmapNode.get("osdmap").get("num_in_osds") ? -1 : osdmapNode.get("osdmap").get("num_in_osds").asInt());
-		
-		
+				
 		JsonNode pgmapNode = rootNode.path("pgmap");
 		status.setPgCount(null == pgmapNode.get("num_pgs") ? -1 : pgmapNode.get("num_pgs").asInt());
 		status.setTotalSize(null == pgmapNode.get("bytes_total") ? -1 : (int)(pgmapNode.get("bytes_total").asLong() / 1024 / 1024 / 1024));

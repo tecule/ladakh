@@ -37,7 +37,7 @@ public class CephStorage {
 		}
 		// int responseCode = response.getResponseStatus().getStatusCode();
 		String message = response.getEntity();
-		logger.debug(message);
+		logger.trace(message);
  		
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode rootNode = null;

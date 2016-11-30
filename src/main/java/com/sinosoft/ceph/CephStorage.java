@@ -24,6 +24,11 @@ public class CephStorage {
 		this.restApiUrl = restApiUrl;
 	}
 	
+	/**
+	 * get status of unified storage 
+	 * @return storage status
+	 * @throws CephException
+	 */
 	public CephStatus getStatus() {
 		CephStatus status = new CephStatus();
 
@@ -33,7 +38,7 @@ public class CephStorage {
 		try {
 			response = request.get(String.class);
 		} catch (Exception e1) {
-			throw new CephException("请求服务出错。" + e1.getMessage(), e1);
+			throw new CephException("获取统一存储服务状态数据发生异常。", e1);
 		}
 		// int responseCode = response.getResponseStatus().getStatusCode();
 		String message = response.getEntity();
@@ -44,9 +49,9 @@ public class CephStorage {
 		try {
 			rootNode = mapper.readTree(message).get("output");
 		} catch (JsonProcessingException e) {
-			throw new CephException("解析数据出错。" + e.getMessage(), e);
+			throw new CephException("解析统一存储服务状态数据出错。", e);
 		} catch (IOException e) {
-			throw new CephException("解析数据出错。" + e.getMessage(), e);
+			throw new CephException("解析统一存储服务状态数据出错。", e);
 		}
 
 		status.setClusterId(null == rootNode.get("fsid") ? "" : rootNode.get("fsid").asText());
